@@ -1,0 +1,150 @@
+/* -----------------------------
+   Reset & Base
+----------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background-color: #f7f9fc;
+  color: #333;
+  line-height: 1.6;
+  padding: 20px;
+}
+
+/* -----------------------------
+   Container
+----------------------------- */
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* -----------------------------
+   Headings & Labels
+----------------------------- */
+h1, h2 {
+  text-align: center;
+  color: #004080;
+}
+h1 { font-size: 2.5rem; margin-bottom: 20px; }
+h2 { font-size: 1.75rem; margin: 30px 0 20px; }
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #444;
+}
+.optional {
+  font-weight: normal;
+  font-size: 0.9rem;
+  color: #777;
+}
+
+/* -----------------------------
+   Form Styles
+----------------------------- */
+form {
+  margin-bottom: 40px;
+  transition: box-shadow 0.3s ease;
+}
+form:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border: 1.8px solid #cfd8e3;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #004080;
+  outline: none;
+}
+textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+button {
+  width: 100%;
+  padding: 14px 25px;
+  background-color: #004080;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+button:hover {
+  background-color: #003366;
+}
+
+/* -----------------------------
+   Table Styles
+----------------------------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border-radius: 8px;
+  overflow: hidden;
+}
+thead {
+  background-color: #004080;
+  color: #fff;
+}
+th, td {
+  padding: 14px 20px;
+  border-bottom: 1px solid #e1e8f0;
+  text-align: left;
+  font-size: 1rem;
+}
+tbody tr:nth-child(even) {
+  background-color: #f1f5f9;
+}
+tbody tr:hover {
+  background-color: #e9eff6;
+}
+.no-data {
+  text-align: center;
+  color: #777;
+}
+
+/* -----------------------------
+   Responsive
+----------------------------- */
+@media (max-width: 600px) {
+  .container {
+    padding: 20px;
+  }
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.4rem; }
+  button {
+    font-size: 1rem;
+    padding: 12px 20px;
+  }
+  th, td {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+}
