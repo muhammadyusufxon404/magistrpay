@@ -1,0 +1,10 @@
+flask
+flask_sqlalchemy
+pandas
+openpyxl
+pytz
+nest_asyncio
+urllib3
+six
+python-telegram-bot[job-queue]==20.3
+requests
