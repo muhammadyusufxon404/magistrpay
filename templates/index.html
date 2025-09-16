@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Magistr To‘lov CRM</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <style>
+    /* Modal oynaning asosiy uslubi */
+    .modal {
+      display: none; /* Odatda ko‘rinmaydi */
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5); /* Orqa fon qorayishi */
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 8% auto;
+      padding: 20px 30px;
+      border-radius: 10px;
+      max-width: 320px; /* Qora printer uchun mosroq */
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      font-family: monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre-wrap; /* Matnni formatlash uchun */
+    }
+
+    .close {
+      color: #888;
+      float: right;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .close:hover {
+      color: black;
+    }
+
+    /* Printda faqat modalni ko‘rsatish */
+    @media print {
+  body * {
+    visibility: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #checkModal, #checkModal * {
+    visibility: visible !important;
+    color: black !important;
+    font-weight: normal !important;
+    font-family: Arial, sans-serif !important;
+  }
+
+  #checkModal {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 280px !important;
+    background: white !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    padding: 10px 15px !important;
+  }
+
+  #checkModal .modal-content {
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    background: white !important;
+  }
+
+  .close, .print-btn {
+    display: none !important;
+  }
+
+  .modal {
+    background-color: transparent !important;
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Magistr To‘lov CRM</h1>
+
+    <form method="POST" action="{{ url_for('index') }}">
+      <label for="ismi">O‘quvchi ismi va familiyasi</label>
+      <input type="text" id="ismi" name="ismi" required />
+
+      <label for="tolov">To‘lov summasi (UZS)</label>
+      <input type="number" id="tolov" name="tolov" min="0" required />
+
+      <label for="kurs">Kurs nomi</label>
+      <input type="text" id="kurs" name="kurs" required />
+
+      <label for="oy">To‘lov oyi</label>
+      <select id="oy" name="oy" required>
+        <option value="" disabled selected>Oyni tanlang</option>
+        <option>Yanvar</option><option>Fevral</option><option>Mart</option><option>Aprel</option>
+        <option>May</option><option>Iyun</option><option>Iyul</option><option>Avgust</option>
+        <option>Sentabr</option><option>Oktabr</option><option>Noyabr</option><option>Dekabr</option>
+      </select>
+
+      <label for="tolov_turi">To‘lov turi</label>
+      <select id="tolov_turi" name="tolov_turi" required>
+        <option value="" disabled selected>To‘lov turini tanlang</option>
+        <option>Naqd</option>
+        <option>Click</option>
+      </select>
+
+      <label for="izoh">Izoh <span class="optional">(ixtiyoriy)</span></label>
+      <textarea id="izoh" name="izoh"></textarea>
+
+      <label for="admin">Admin (to‘lovni qabul qilgan)</label>
+      <input type="text" id="admin" name="admin" required />
+
+      <label for="oqituvchi">O‘qituvchi (tayinlangan)</label>
+      <input type="text" id="oqituvchi" name="oqituvchi" required />
+
+      <button type="submit">To‘lovni qo‘shish</button>
+    </form>
+
+    <h2>Bugungi to‘lovlar ({{ tolovlar|length }})</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>O‘quvchi</th>
+          <th>Summa</th>
+          <th>Kurs</th>
+          <th>Oyi</th>
+          <th>To‘lov turi</th>
+          <th>Izoh</th>
+          <th>Admin</th>
+          <th>O‘qituvchi</th>
+          <th>Sana & Soat</th>
+          <th>Amal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in tolovlar %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ p[0] }}</td>
+          <td>{{ p[1] }} so‘m</td>
+          <td>{{ p[2] }}</td>
+          <td>{{ p[3] }}</td>
+          <td>{{ p[8] or '-' }}</td>
+          <td>{{ p[4] or '-' }}</td>
+          <td>{{ p[5] }}</td>
+          <td>{{ p[6] }}</td>
+          <td>{{ p[7] }}</td>
+          <td>
+            <button
+              onclick="showCheckModal(
+                '{{ p[0]|escape }}',
+                '{{ p[1] }}',
+                '{{ p[2]|escape }}',
+                '{{ p[3]|escape }}',
+                '{{ p[4]|default('-')|escape }}',
+                '{{ p[5]|escape }}',
+                '{{ p[6]|escape }}',
+                '{{ p[7]|escape }}',
+                '{{ p[8]|default('-')|escape }}'
+              )"
+            >Chek chiqarish</button>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="11" class="no-data">Hozircha to‘lovlar yo‘q</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal (Chek chiqarish oynasi) -->
+  <div id="checkModal" class="modal">
+    <div class="modal-content" id="checkContent">
+      <span class="close" onclick="closeCheckModal()">&times;</span>
+      <h2>To‘lov Cheki</h2>
+      <pre id="checkData"></pre>
+      <h2 style="text-align:center; margin-top: 20px;">MAGISTR O'QUV MARKAZI!</h2>
+      <button class="print-btn" onclick="window.print()">Chekni chop etish</button>
+    </div>
+  </div>
+
+  <script>
+    function showCheckModal(ismi, summa, kurs, oy, izoh, admin, oqituvchi, sana, turi) {
+      // Chek matnini tayyorlash
+      const checkText = `
+O‘quvchi   : ${ismi}
+Summa      : ${summa} so‘m
+Kurs       : ${kurs}
+Oyi        : ${oy}
+To‘lov turi : ${turi}
+Izoh       : ${izoh}
+Admin      : ${admin}
+O‘qituvchi : ${oqituvchi}
+Sana & Soat: ${sana}
+      `.trim();
+
+      document.getElementById('checkData').textContent = checkText;
+      document.getElementById('checkModal').style.display = 'block';
+    }
+
+    function closeCheckModal() {
+      document.getElementById('checkModal').style.display = 'none';
+    }
+
+    // Modal oynadan tashqariga bosilganda yopish
+    window.onclick = function(event) {
+      const modal = document.getElementById('checkModal');
+      if (event.target == modal) {
+        closeCheckModal();
+      }
+    }
+  </script>
+</body>
+</html>
