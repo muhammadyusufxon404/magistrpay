@@ -70,6 +70,7 @@ def index():
         con.close()
 
         message = (
+            f"💳 *MagistrPay 2!*\n\n"
             f"💳 *Yangi to‘lov kiritildi!*\n\n"
             f"👤 Ismi: {ismi}\n"
             f"💰 To‘lov: {tolov} so‘m\n"
